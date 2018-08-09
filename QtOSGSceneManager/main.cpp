@@ -27,10 +27,15 @@ int main(int argc, char *argv[])
 	QString path; QString savePath; QString LOD; QString saveName; QString savePathAuto;
 
 
+
 	std::wcout << QString("请输入倾斜数据目录").toStdWString() << std::endl;
 	qin >> path;
 	path = path + "\\";
-	savePathAuto = path + "\\output" + "\\";
+
+	std::wcout << QString("请输入LOD级别").toStdWString() << std::endl;
+	qin >> LOD;
+
+	savePathAuto = path + "\\"+LOD+"output" + "\\";
 
 	// 检查目录是否存在，若不存在则新建
 	QDir dir;
@@ -40,8 +45,7 @@ int main(int argc, char *argv[])
 		qDebug() << "新建目录是否成功" << res;
 	}
 
-	std::wcout << QString("请输入LOD级别").toStdWString() << std::endl;
-	qin >> LOD;
+
 
 
 	//获取所需文件
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
 	for each (QString filename in selectedOSGBFiles)
 	{
 		std::string qxfilename = filename.toStdString();
-		/*std::cout << qxfilename << endl;*/
+		std::cout << qxfilename + "has been loaded!"<< endl;
 		root->addChild(osgDB::readNodeFile(qxfilename));
 	}
 
