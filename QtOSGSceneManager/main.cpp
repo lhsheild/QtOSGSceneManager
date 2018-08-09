@@ -6,6 +6,7 @@
 #include "TextureVisitor.h"
 #include "VertexVisitor.h"
 #include "OSGSelectFiles.h"
+#include "FindNodeVisitor.h"
 
 #include <osgDB/readfile>
 #include <osgDB/writefile>
@@ -60,12 +61,24 @@ int main(int argc, char *argv[])
 	for each (QString filename in selectedOSGBFiles)
 	{
 		std::string qxfilename = filename.toStdString();
+		osg::ref_ptr<osg::Node> node = osgDB::readNodeFile(qxfilename);
 		/*std::cout << qxfilename << endl;*/
-		root->addChild(osgDB::readNodeFile(qxfilename));
+		//root->addChild(osgDB::readNodeFile(qxfilename));
+		root->addChild(node);
+		FindNodeVisitor fv(qxfilename);
+		node->accept(fv);
+		if (!fv.getFirst())
+		{
+			qDebug() << "找不到节点" <<endl;
+		}
+		else
+		{
+			qDebug() << "找到节点" << endl;
+		}
 	}
 
 	//创建纹理、顶点访问器并启动访问器
-	TextureVisitor tv; VertexVisitor vv;
+	TextureVisitor tv; VertexVisitor vv; 
 	root->accept(tv); root->accept(vv);
 	//申请输出流
 	std::fstream vvfout("vv.txt");
