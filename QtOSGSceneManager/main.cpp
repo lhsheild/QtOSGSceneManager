@@ -6,7 +6,6 @@
 #include "TextureVisitor.h"
 #include "VertexVisitor.h"
 #include "OSGSelectFiles.h"
-#include "FindNodeVisitor.h"
 
 #include <osgDB/readfile>
 #include <osgDB/writefile>
@@ -28,10 +27,15 @@ int main(int argc, char *argv[])
 	QString path; QString savePath; QString LOD; QString saveName; QString savePathAuto;
 
 
+
 	std::wcout << QString("请输入倾斜数据目录").toStdWString() << std::endl;
 	qin >> path;
 	path = path + "\\";
-	savePathAuto = path + "\\output" + "\\";
+
+	std::wcout << QString("请输入LOD级别").toStdWString() << std::endl;
+	qin >> LOD;
+
+	savePathAuto = path + "\\"+LOD+"output" + "\\";
 
 	// 检查目录是否存在，若不存在则新建
 	QDir dir;
@@ -41,8 +45,7 @@ int main(int argc, char *argv[])
 		qDebug() << "新建目录是否成功" << res;
 	}
 
-	std::wcout << QString("请输入LOD级别").toStdWString() << std::endl;
-	qin >> LOD;
+
 
 
 	//获取所需文件
@@ -61,24 +64,12 @@ int main(int argc, char *argv[])
 	for each (QString filename in selectedOSGBFiles)
 	{
 		std::string qxfilename = filename.toStdString();
-		osg::ref_ptr<osg::Node> node = osgDB::readNodeFile(qxfilename);
-		/*std::cout << qxfilename << endl;*/
-		//root->addChild(osgDB::readNodeFile(qxfilename));
-		root->addChild(node);
-		FindNodeVisitor fv(qxfilename);
-		node->accept(fv);
-		if (!fv.getFirst())
-		{
-			qDebug() << "找不到节点" <<endl;
-		}
-		else
-		{
-			qDebug() << "找到节点" << endl;
-		}
+		std::cout << qxfilename + "has been loaded!"<< endl;
+		root->addChild(osgDB::readNodeFile(qxfilename));
 	}
 
 	//创建纹理、顶点访问器并启动访问器
-	TextureVisitor tv; VertexVisitor vv; 
+	TextureVisitor tv; VertexVisitor vv;
 	root->accept(tv); root->accept(vv);
 	//申请输出流
 	std::fstream vvfout("vv.txt");

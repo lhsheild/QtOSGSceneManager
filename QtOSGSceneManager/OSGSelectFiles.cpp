@@ -29,8 +29,8 @@ QStringList OSGSelectFiles::SelectFileList(QFileInfoList file_info_list, QString
 		if ((!filter.contains(LOD, Qt::CaseInsensitive)) || (filter2 != "osgb"))//!filter.startsWith(title)) || , QString title
 		{
 			QFile f;
-			f.remove(delfile);
-			qDebug() << "Delete: " + filter;
+			//f.remove(delfile);
+			//qDebug() << "Delete: " + filter;
 			continue;
 		}
 		_osgbFileList.append(fileinfo.absoluteFilePath());
