@@ -98,16 +98,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FindNodeVisitor.cpp" />
+    <ClCompile Include="GetSimplifySTLDataVisitor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OSGBFile.cpp" />
     <ClCompile Include="OSGSelectFiles.cpp" />
     <ClCompile Include="TextureVisitor.cpp" />
     <ClCompile Include="VertexVisitor.cpp" />
+    <ClCompile Include="VisitorNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FindNodeVisitor.h" />
+    <ClInclude Include="GetSimplifySTLDataVisitor.h" />
+    <ClInclude Include="OSGBFile.h" />
     <ClInclude Include="OSGSelectFiles.h" />
     <ClInclude Include="TextureVisitor.h" />
     <ClInclude Include="VertexVisitor.h" />
+    <ClInclude Include="VisitorNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

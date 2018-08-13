@@ -6,6 +6,7 @@
 #include "TextureVisitor.h"
 #include "VertexVisitor.h"
 #include "OSGSelectFiles.h"
+#include "OSGBFile.h"
 
 #include <osgDB/readfile>
 #include <osgDB/writefile>
@@ -15,10 +16,62 @@
 #include <fstream>
 #include<iostream>
 #include <io.h>
+#include "GetSimplifySTLDataVisitor.h"
+#include "VisitorNode.h"
 
 int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
+	osg::ref_ptr<osgViewer::Viewer> viewer = new osgViewer::Viewer;
+	VisitorNode vn;
+
+	osg::ref_ptr<osg::Group> root = new osg::Group;
+	root->setName("root");
+	osg::ref_ptr<osg::Group> group = new osg::Group;
+	root->setName("group");
+	osg::ref_ptr<osg::Group> group1 = new osg::Group;
+	root->setName("group1");
+	osg::ref_ptr<osg::Node> glider = osgDB::readNodeFile("glider.osg");
+	glider->setName("glider");
+	osg::ref_ptr<osg::Node> cow = osgDB::readNodeFile("cow.osg");
+	cow->setName("cow");
+	osg::ref_ptr<osg::MatrixTransform> mt = new osg::MatrixTransform;
+	mt->setMatrix(osg::Matrix::translate(osg::Vec3(30, 0, 0)) * osg::Matrix::scale(osg::Vec3(0.2, 0.2, 0.2)));
+	mt->setName("mt");
+	osg::ref_ptr<osg::Switch> switchs = new osg::Switch;
+	switchs->setName("switchs");
+
+
+	//组织节点结构
+	root->addChild(group);
+	root->addChild(switchs);
+	group->addChild(mt);
+	group->addChild(cow);
+	switchs->addChild(group1);
+	group1->addChild(glider);
+	mt->addChild(cow);
+	mt->addChild(glider);
+
+	//设置遍历器
+	root->accept(vn);
+
+	viewer->setSceneData(root);
+
+	viewer->run();
+
+		//std::vector<>
+		//for (int i =0;i<s.vertexs.size();i++)
+		//{
+		//	fout<<"v"<<" "<<
+		//}
+		//for (int i = 0; i<s.vertexs.size(); i++)
+		//{
+		//	//std::cout << s.vertexs.at(i) << std::endl;
+		//}
+
+	
+
+	/*2018-8-13
 	setlocale(LC_CTYPE, "chs");
 
 	//设置工作空间
@@ -37,16 +90,6 @@ int main(int argc, char *argv[])
 
 	savePathAuto = path + "\\"+LOD+"output" + "\\";
 
-	// 检查目录是否存在，若不存在则新建
-	QDir dir;
-	if (!dir.exists(savePathAuto))
-	{
-		bool res = dir.mkpath(savePathAuto);
-		qDebug() << "新建目录是否成功" << res;
-	}
-
-
-
 
 	//获取所需文件
 	OSGSelectFiles osgSelect;
@@ -54,6 +97,10 @@ int main(int argc, char *argv[])
 	QFileInfoList osgbFileInfo = osgSelect.GetFileList(path);
 	QStringList selectedOSGBFiles = osgSelect.SelectFileList(osgbFileInfo, LOD);
 	QFileInfoList selectedOSGBFileInfo = osgSelect._selectedOSGBFileInfo;
+
+	//分目录获取文件信息
+	QVector<OSGBFile*> OSGBFileVector = osgSelect.selectFileinfoByFolder;
+
 	//实例化Viewer
 	osg::ref_ptr<osgViewer::Viewer> view = new osgViewer::Viewer();
 	//创建根节点
@@ -71,7 +118,9 @@ int main(int argc, char *argv[])
 	//创建纹理、顶点访问器并启动访问器
 	TextureVisitor tv; VertexVisitor vv;
 	root->accept(tv); root->accept(vv);
-	//申请输出流
+	*/
+
+	/*申请输出流
 	std::fstream vvfout("vv.txt");
 	std::fstream tvfout("tv.txt");
 	//获取顶点数
@@ -85,8 +134,17 @@ int main(int argc, char *argv[])
 		{
 			vvfout << vviter->x() << "	" << vviter->y() << "	" << vviter->z() << std::endl;
 		}
-
 		vviter++;
+	}
+	*/
+
+	///2018-8-13
+	/*
+	QDir dir;
+	if (!dir.exists(savePathAuto))
+	{
+		bool res = dir.mkpath(savePathAuto);
+		qDebug() << "新建目录是否成功" << res;
 	}
 
 	//贴图映射表
@@ -94,7 +152,7 @@ int main(int argc, char *argv[])
 	//贴图映射表迭代器
 	std::map<std::string, osg::Image*>::iterator iter = imageList.begin();
 
-	/*unsigned int cnt = 0; char* buffer = new char[2000];*/
+
 
 	std::vector<std::string> nameList;
 
@@ -104,7 +162,7 @@ int main(int argc, char *argv[])
 		osgDB::writeImageFile(*(iter->second), savePathAuto.toStdString() + iter->first);
 
 		//sprintf(buffer, "Tile_+122_-045_L19%d.jpg", cnt++);
-		tvfout << iter->first<<"  "<<iter->second << std::endl;		
+		//tvfout << iter->first<<"  "<<iter->second << std::endl;		
 	}
 
 	QString saveNameFirst; QString saveNameLast;
@@ -124,5 +182,10 @@ int main(int argc, char *argv[])
 	view->run();
 
 	getchar();
+	*/
+
+
+
+
 	return a.exec();
 }

@@ -8,6 +8,7 @@
 #include <qdir.h>
 #include <qdebug.h>
 #include <qtextstream.h>
+#include "OSGBFile.h"
 
 class OSGSelectFiles
 {
@@ -16,5 +17,6 @@ public:
 	QStringList SelectFileList(QFileInfoList file_info_list,QString LOD);
 	QStringList _osgbFileList;
 	QFileInfoList _selectedOSGBFileInfo;
+	QVector<OSGBFile*> selectFileinfoByFolder;
 };
 

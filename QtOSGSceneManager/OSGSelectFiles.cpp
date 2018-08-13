@@ -1,11 +1,21 @@
 #include "OSGSelectFiles.h"
-
+#include "OSGBFile.h"
 //获取目录下文件信息列表
 QFileInfoList OSGSelectFiles::GetFileList(QString path)
 {
 	QDir dir(path);
 	QFileInfoList file_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 	QFileInfoList folder_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+	//创建不同文件夹的文件列表
+	for (int i = 0; i < folder_list.size(); i++)
+	{
+		OSGBFile* osgbf = new OSGBFile();
+		osgbf->name = folder_list.at(i).fileName();
+		QString name = folder_list.at(i).absoluteFilePath();
+		osgbf->_OSGBFileInfo_list = GetFileList(name);
+		selectFileinfoByFolder.append(osgbf);
+	}
 
 	for (int i = 0; i != folder_list.size(); i++)
 	{
